@@ -7,7 +7,7 @@ public class ActorManager : MonoBehaviour
 {
     public bool isItem;
 
-    public ActorController ac;
+    public PlayerControl pc;
 
     public BattleManager bm;
     public WeaponManager wm;
@@ -18,13 +18,13 @@ public class ActorManager : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-        ac = GetComponent<ActorController>();
+        pc = GetComponent<PlayerControl>();
         bm = Bind<BattleManager>(transform.Find("sensor").gameObject);
-        wm = Bind<WeaponManager>(ac.model);
+        wm = Bind<WeaponManager>(pc.model);
         sm = Bind<StateManager>(gameObject);
         dm = Bind<DiretorManager>(gameObject);
         im = Bind<InteractionManager>(transform.Find("sensor").gameObject);
-        ac.OnAction += DoAction;
+        pc.OnAction += DoAction;
     }
 
     private void DoAction() {
@@ -76,7 +76,7 @@ public class ActorManager : MonoBehaviour
             Block();
         }
         else {
-            if(attackValid && !ac.CheckState("hited"))
+            if(attackValid && !pc.CheckState("hited"))
                 GetDamage(attacker.wm.am);
         }
     }
@@ -101,31 +101,31 @@ public class ActorManager : MonoBehaviour
     }
 
     private void Stunned() {
-        ac.SetTrigger("stunned");
+        pc.SetTrigger("stunned");
     }
 
     public void Block() {
-        ac.SetTrigger("block");
+        pc.SetTrigger("block");
     }
 
     public void Hit() {
-        ac.SetTrigger("hit");
+        pc.SetTrigger("hit");
 
     }
 
     public void Die() {
-        ac.SetTrigger("die");
+        pc.SetTrigger("die");
         //ac.pi.moveEnable = false;
-        if (ac.camcon.lockState) {
-            ac.camcon.Lockon();
-        }
+        //if (pc.camcon.lockState) {
+        //    pc.camcon.Lockon();
+        //}
     }
 
     public void LockActorController(bool value) {
-        ac.SetBool("lock", value);
-        ac.pi.moveEnable = !value;
-        ac.Stop();
-        ac.model.SendMessage("AttackDisable");
+        pc.SetBool("lock", value);
+        pc.LockMovement();
+        pc.Stop();
+        pc.model.SendMessage("AttackDisable");
     }
 
 }

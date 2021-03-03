@@ -47,21 +47,21 @@ public class StateManager : ActorManagerInterface
     }
 
     private void Update() {
-        isGround = am.ac.CheckState("ground");
-        isJump = am.ac.CheckState("jump");
-        isFall = am.ac.CheckState("fall");
-        isRoll = am.ac.CheckState("roll");
-        isJab = am.ac.CheckState("jab");
-        isAttack = am.ac.CheckStateByTag("attackR") || am.ac.CheckStateByTag("attackL");
-        isHit = am.ac.CheckState("hited");
-        isDie = am.ac.CheckState("death");
-        isBlock = am.ac.CheckState("block");
-        isCounterBack = am.ac.CheckState("counterBack");
-        isStunned = am.ac.CheckState("stunned");
+        isGround = am.pc.CheckState("ground");
+        isJump = am.pc.CheckState("jump");
+        isFall = am.pc.CheckState("fall");
+        isRoll = am.pc.CheckState("roll");
+        isJab = am.pc.CheckState("jab");
+        isAttack = am.pc.CheckStateByTag("attackR") || am.pc.CheckStateByTag("attackL");
+        isHit = am.pc.CheckState("hited");
+        isDie = am.pc.CheckState("death");
+        isBlock = am.pc.CheckState("block");
+        isCounterBack = am.pc.CheckState("counterBack");
+        isStunned = am.pc.CheckState("stunned");
         //isDefense = am.ac.CheckState("defense1h", "Defence Layer");
 
         isCanDefense = isGround || isBlock;
-        isDefense = isCanDefense && am.ac.CheckState("defense1h", "Defence Layer");
+        isDefense = isCanDefense && am.pc.CheckState("defense1h", "Defence Layer");
         isImmortal = isRoll || isJab;
     }
     

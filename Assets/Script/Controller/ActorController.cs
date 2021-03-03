@@ -50,8 +50,8 @@ public class ActorController : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-        if (pi.lockon)
-            camcon.Lockon();
+        //if (pi.lockon)
+        //    camcon.Lockon();
 
         float runAnimSpeed = (pi.run ? 2.0f : 1.0f);
 

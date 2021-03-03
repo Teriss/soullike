@@ -53,9 +53,9 @@ public class WeaponManager : ActorManagerInterface
     }
 
     public void AttackEnable() {
-        if(am.ac.CheckStateByTag("attackR"))
+        if(am.pc.CheckStateByTag("attackR"))
             weaponR.enabled = true;
-        else if (am.ac.CheckStateByTag("attackL"))
+        else if (am.pc.CheckStateByTag("attackL"))
             weaponL.enabled = true;
     }
 

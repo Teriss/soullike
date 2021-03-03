@@ -21,15 +21,17 @@ public class onGroundSensor : MonoBehaviour
     {
         
     }
-    private void FixedUpdate()
+    public bool IsGround()
     {
         point0 = transform.position + transform.up * (radius - offset);
         point1 = point0 + transform.up * capcol.height - 2 * transform.up * (radius - offset);
 
         Collider[] cols = Physics.OverlapCapsule(point0, point1, radius,LayerMask.GetMask("Ground"));
         if (cols.Length != 0)
-            SendMessageUpwards("onTheGround");
+            //SendMessageUpwards("onTheGround");
+            return true;
         else
-            SendMessageUpwards("inTheAir");
+            //SendMessageUpwards("inTheAir");
+            return false;
     }
 }

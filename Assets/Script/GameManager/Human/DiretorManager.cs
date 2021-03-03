@@ -31,17 +31,17 @@ public class DiretorManager :ActorManagerInterface
         TimelineAsset timeline = (TimelineAsset)pd.playableAsset;
         foreach (var track in timeline.GetOutputTracks()) {
             if (track.name == "Attacker track")
-                pd.SetGenericBinding(track, attacker.ac.GetAnimator());
+                pd.SetGenericBinding(track, attacker.pc.GetAnimator());
             else if (track.name == "Victim track")
-                pd.SetGenericBinding(track, victim.ac.GetAnimator());
+                pd.SetGenericBinding(track, victim.pc.GetAnimator());
             else if (track.name == "Attacker Script")
                 pd.SetGenericBinding(track, attacker);
             else if (track.name == "Victim Script")
                 pd.SetGenericBinding(track, victim);
         }
         //set postion
-        attacker.ac.model.transform.forward = -victim.ac.model.transform.forward;
-        attacker.ac.transform.position = victim.ac.transform.position - attacker.ac.model.transform.forward;
+        attacker.pc.model.transform.forward = -victim.pc.model.transform.forward;
+        attacker.pc.transform.position = victim.pc.transform.position - attacker.pc.model.transform.forward;
 
         pd.Play();
     }
@@ -55,7 +55,7 @@ public class DiretorManager :ActorManagerInterface
         TimelineAsset timeline = (TimelineAsset)pd.playableAsset;
         foreach (var track in timeline.GetOutputTracks()) {
             if (track.name == "Player")
-                pd.SetGenericBinding(track, player.ac.GetAnimator());
+                pd.SetGenericBinding(track, player.pc.GetAnimator());
             else if (track.name == "Box")
                 pd.SetGenericBinding(track, box.ic.GetAnimator());
             else if (track.name == "Player Script") { 
@@ -79,8 +79,8 @@ public class DiretorManager :ActorManagerInterface
         }
 
         //set postion
-        player.ac.model.transform.forward = box.ic.model.transform.forward;
-        player.ac.transform.position = box.ic.transform.position - player.ac.model.transform.forward * 1.2f;
+        player.pc.model.transform.forward = box.ic.model.transform.forward;
+        player.pc.transform.position = box.ic.transform.position - player.pc.model.transform.forward * 1.2f;
         pd.Evaluate();
         pd.Play();
     }
