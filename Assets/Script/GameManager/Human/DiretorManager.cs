@@ -22,7 +22,7 @@ public class DiretorManager :ActorManagerInterface
     }
 
 
-    public void FrontStun(ActorManager attacker, ActorManager victim) {
+    public void FrontStun(CharactorManager attacker, CharactorManager victim) {
         if (pd.state == PlayState.Playing)
             return;
         //set timeline
@@ -31,22 +31,22 @@ public class DiretorManager :ActorManagerInterface
         TimelineAsset timeline = (TimelineAsset)pd.playableAsset;
         foreach (var track in timeline.GetOutputTracks()) {
             if (track.name == "Attacker track")
-                pd.SetGenericBinding(track, attacker.pc.GetAnimator());
+                pd.SetGenericBinding(track, attacker.inputs.GetAnimator());
             else if (track.name == "Victim track")
-                pd.SetGenericBinding(track, victim.pc.GetAnimator());
+                pd.SetGenericBinding(track, victim.inputs.model.GetComponent<Animator>());
             else if (track.name == "Attacker Script")
                 pd.SetGenericBinding(track, attacker);
             else if (track.name == "Victim Script")
                 pd.SetGenericBinding(track, victim);
         }
         //set postion
-        attacker.pc.model.transform.forward = -victim.pc.model.transform.forward;
-        attacker.pc.transform.position = victim.pc.transform.position - attacker.pc.model.transform.forward;
+        attacker.inputs.model.transform.forward = -victim.inputs.model.transform.forward;
+        attacker.inputs.transform.position = victim.inputs.transform.position - attacker.inputs.model.transform.forward;
 
         pd.Play();
     }
 
-    public void OpenBox(ActorManager player, ItemManager box) {
+    public void OpenBox(CharactorManager player, GameObject box) {
         if (pd.state == PlayState.Playing)
             return;
         //set timeline
@@ -55,9 +55,10 @@ public class DiretorManager :ActorManagerInterface
         TimelineAsset timeline = (TimelineAsset)pd.playableAsset;
         foreach (var track in timeline.GetOutputTracks()) {
             if (track.name == "Player")
-                pd.SetGenericBinding(track, player.pc.GetAnimator());
-            else if (track.name == "Box")
-                pd.SetGenericBinding(track, box.ic.GetAnimator());
+                pd.SetGenericBinding(track, player.inputs.GetAnimator());
+            else if (track.name == "Box") {
+                pd.SetGenericBinding(track, box.GetComponent<Animator>());
+            }
             else if (track.name == "Player Script") { 
                 pd.SetGenericBinding(track, player);
                 foreach(var clip in track.GetClips()) {
@@ -72,15 +73,15 @@ public class DiretorManager :ActorManagerInterface
                 foreach (var clip in track.GetClips()) {
                     ItemInteractionPlayableClip myclip = (ItemInteractionPlayableClip)clip.asset;
                     ItemInteractionPlayableBehaviour mybehav = myclip.template;
-                    myclip.itemManager.exposedName = System.Guid.NewGuid().ToString();
-                    pd.SetReferenceValue(myclip.itemManager.exposedName, box);
+                    //myclip.itemManager.exposedName = System.Guid.NewGuid().ToString();
+                    //pd.SetReferenceValue(myclip.itemManager.exposedName, box);
                 }
             }
         }
 
         //set postion
-        player.pc.model.transform.forward = box.ic.model.transform.forward;
-        player.pc.transform.position = box.ic.transform.position - player.pc.model.transform.forward * 1.2f;
+        player.inputs.model.transform.forward = box.transform.forward;
+        player.inputs.transform.position = box.transform.position - player.inputs.model.transform.forward * 1.2f;
         pd.Evaluate();
         pd.Play();
     }

@@ -8,7 +8,7 @@ public class StabAttackScriptMixerBehaviour : PlayableBehaviour
     // NOTE: This function is called at runtime and edit time.  Keep that in mind when setting the values of properties.
     public override void ProcessFrame(Playable playable, FrameData info, object playerData)
     {
-        ActorManager trackBinding = playerData as ActorManager;
+        PlayerManager trackBinding = playerData as PlayerManager;
 
         if (!trackBinding)
             return;

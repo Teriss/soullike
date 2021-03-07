@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class ActorManagerInterface : MonoBehaviour
 {
-    public ActorManager am;
-    public ItemManager itemm;
+    public CharactorManager cm;
 
 }

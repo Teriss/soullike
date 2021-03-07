@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(CapsuleCollider))]
-public class BattleManager : ActorManagerInterface
-{
+public class BattleManager : ActorManagerInterface {
     private CapsuleCollider defCol;
     private void Start() {
         defCol = GetComponent<CapsuleCollider>();
@@ -15,15 +14,21 @@ public class BattleManager : ActorManagerInterface
     }
 
     private void OnTriggerEnter(Collider other) {
-        WeaponController attackerWC = other.GetComponentInParent<WeaponController>();
-        if (attackerWC == null)
+        if (other.tag != "weapon")
             return;
+        WeaponController attackerWC = other.GetComponentInParent<WeaponController>();
+        if (attackerWC == null || attackerWC.wm == this.cm.wm)
+            return;
+        CharactorManager attacker = attackerWC.wm.GetComponentInParent<CharactorManager>();
 
-        GameObject attacker = attackerWC.wm.am.gameObject;
-        GameObject attackee = am.gameObject;
+        //GameObject attacker;
+        //GameObject attackee;
 
-        Vector3 attackDir = attackee.transform.position - attacker.transform.position;
-        Vector3 counterDir = attacker.transform.position - attackee.transform.position;
+        //attacker = attackerWC.wm.gameObject;
+        //attackee = gameObject;
+
+        //Vector3 attackDir = attackee.transform.position - attacker.transform.position;
+        //Vector3 counterDir = attacker.transform.position - attackee.transform.position;
 
         //float attackAngle = Vector3.Angle(attacker.transform.forward, attackDir);   //¹¥»÷½Ç¶È
         //float counterAngle1 = Vector3.Angle(attackee.transform.forward, counterDir);    //µ¯·´½Ç¶È
@@ -34,10 +39,7 @@ public class BattleManager : ActorManagerInterface
         //bool counterValid = (counterAngle1 < 90 && Mathf.Abs(counterAngle2) < 90);
         bool counterValid = true;
 
-
-        if (other.tag == "weapon") {
-            am.TryDamage(attackerWC,attackValid,counterValid);
-        }
+        cm.TryDamage(attacker, attackValid, counterValid);
     }
 
 }

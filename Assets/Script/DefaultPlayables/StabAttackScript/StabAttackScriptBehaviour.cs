@@ -19,8 +19,8 @@ public class StabAttackScriptBehaviour : PlayableBehaviour
         pd =(PlayableDirector) playable.GetGraph().GetResolver();
         foreach(var track in pd.playableAsset.outputs) {
             if (track.streamName == "Attacker Script" || track.streamName == "Victim Script") {
-                ActorManager am = pd.GetGenericBinding(track.sourceObject) as ActorManager;
-                am.LockActorController(true);
+                CharactorManager cm = pd.GetGenericBinding(track.sourceObject) as CharactorManager;
+                cm.LockActorController(true);
             }
         }
     }
@@ -28,8 +28,8 @@ public class StabAttackScriptBehaviour : PlayableBehaviour
     public override void OnGraphStop(Playable playable) {
         foreach (var track in pd.playableAsset.outputs) {
             if (track.streamName == "Victim Script") {
-                ActorManager am = pd.GetGenericBinding(track.sourceObject) as ActorManager;
-                am.LockActorController(false);
+                CharactorManager cm = pd.GetGenericBinding(track.sourceObject) as CharactorManager;
+                cm.LockActorController(false);
             }
         }
     }
@@ -38,8 +38,8 @@ public class StabAttackScriptBehaviour : PlayableBehaviour
         if (times > 0) {
             foreach (var track in pd.playableAsset.outputs) {
                 if (track.streamName == "Attacker Script") {
-                    ActorManager am = pd.GetGenericBinding(track.sourceObject) as ActorManager;
-                    am.LockActorController(false);
+                    CharactorManager cm = pd.GetGenericBinding(track.sourceObject) as CharactorManager;
+                    cm.LockActorController(false);
                 }
             }
         }

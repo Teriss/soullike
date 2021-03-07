@@ -104,12 +104,12 @@ public class CameraController : MonoBehaviour {
     private class LockTarget{
         public GameObject obj;
         public float halfHeight;
-        public ActorManager am;
+        public PlayerManager am;
         
         public LockTarget(GameObject obj,float halfHeight) {
             this.obj = obj;
             this.halfHeight = halfHeight;
-            am = obj.GetComponent<ActorManager>();
+            am = obj.GetComponent<PlayerManager>();
         }
     }
 

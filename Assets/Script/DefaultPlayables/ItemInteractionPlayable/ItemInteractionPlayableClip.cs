@@ -7,8 +7,7 @@ using UnityEngine.Timeline;
 public class ItemInteractionPlayableClip : PlayableAsset, ITimelineClipAsset
 {
     public ItemInteractionPlayableBehaviour template = new ItemInteractionPlayableBehaviour ();
-    public ExposedReference<ItemManager> itemManager;
-    public ExposedReference<ActorManager> actorManager;
+    public ExposedReference<PlayerManager> actorManager;
 
     public ClipCaps clipCaps
     {
@@ -19,7 +18,6 @@ public class ItemInteractionPlayableClip : PlayableAsset, ITimelineClipAsset
     {
         var playable = ScriptPlayable<ItemInteractionPlayableBehaviour>.Create (graph, template);
         ItemInteractionPlayableBehaviour clone = playable.GetBehaviour ();
-        clone.itemManager = itemManager.Resolve (graph.GetResolver ());
         clone.actorManager = actorManager.Resolve(graph.GetResolver());
         return playable;
     }

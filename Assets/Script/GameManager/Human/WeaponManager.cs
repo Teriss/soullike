@@ -13,6 +13,7 @@ public class WeaponManager : ActorManagerInterface
     public WeaponController wcL;
     public WeaponController wcR;
 
+
     private void Start() {
         whL = transform.DFSforWeapon("LeftWeaponHandel").gameObject;
         whR =  transform.DFSforWeapon("RightWeaponHandel").gameObject;
@@ -53,9 +54,9 @@ public class WeaponManager : ActorManagerInterface
     }
 
     public void AttackEnable() {
-        if(am.pc.CheckStateByTag("attackR"))
+        if (cm.inputs.CheckStateByTag("attackR"))
             weaponR.enabled = true;
-        else if (am.pc.CheckStateByTag("attackL"))
+        else if (cm.inputs.CheckStateByTag("attackL"))
             weaponL.enabled = true;
     }
 
@@ -65,11 +66,12 @@ public class WeaponManager : ActorManagerInterface
     }
 
     public void CounterBackEnable() {
-        am.sm.IsCounterBackEnable = true;
+        cm.sm.IsCounterBackEnable = true;
+        
     }
 
     public void CounterBackDisable() {
-        am.sm.IsCounterBackEnable = false;
+        cm.sm.IsCounterBackEnable = false;
     }
 
 }

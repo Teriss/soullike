@@ -6,8 +6,7 @@ using UnityEngine.Timeline;
 [Serializable]
 public class ItemInteractionPlayableBehaviour : PlayableBehaviour
 {
-    public ItemManager itemManager;
-    public ActorManager actorManager;
+    public PlayerManager actorManager;
 
     public override void OnPlayableCreate (Playable playable)
     {
