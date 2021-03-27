@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,106 +7,150 @@ using UnityEngine.AI;
 
 public class EnemyAI : CharactorInput
 {
-	//private CharacterController cc;
-	//public GameObject model;
-	//private Animator anim;
+	private enum EnemyState { idel, patrol, seek, attack, back ,death }
+	[SerializeReference]
+	private EnemyState AIstate = new EnemyState();
 
-	private NavMeshAgent navMeshAgent;
-	public GameObject target;
-
-
-
-	public float maxSeekDistance;
-	private float times = 10.0f;
-	private int Action;
-
-
-	private enum EnemyState { idel,seek,run,walk,attack}
-	private EnemyState state = new EnemyState();
 	private AnimatorStateInfo animState;
-	private float distanceToTraget;
+	private NavMeshAgent navMeshAgent;
+	private GameObject target;
+
+	private Vector3 originPos;
+	private Vector3 originForword;
+	private Vector3 targetPos = Vector3.zero;
+	public float maxSeekDistance;
+	[SerializeReference]
+	private float distanceToOri;
+
+	private bool wait = true;
+	private float timer = 3.0f;
+	private int attackAction;
+
 
 	void Start() {
-		navMeshAgent = GetComponent<NavMeshAgent>();//获取navmeshagent
+		navMeshAgent = GetComponent<NavMeshAgent>();
 		anim = model.GetComponent<Animator>();
 		cc = GetComponent<CharacterController>();
+		AIstate = EnemyState.idel;
+		originPos = transform.position;
+		originForword = transform.forward;
 	}
     // Update is called once per frame
     void Update() {
-        //navMeshAgent.SetDestination(target.transform.position);//设置导航的目标点
-
-        //CheckState();
-        //switch (state) {
-        //    case EnemyState.idel:
-        //        //idel
-        //        Idel();
-        //        break;
-        //    case EnemyState.seek:
-        //        Seek();
-        //        break;
-        //}
-    }
-
-    private void CheckState() {
-		distanceToTraget = Vector3.Distance(target.transform.position, this.transform.position);
 		animState = anim.GetCurrentAnimatorStateInfo(0);
-		if (distanceToTraget > maxSeekDistance)
-			state = EnemyState.idel;
-		else
-			state = EnemyState.seek;
-	}
+		distanceToOri = Vector3.Distance(transform.position, originPos);
 
-	private void Idel() {
-		times -= Time.deltaTime;
-		if (times < 0) {
-			Action = Random.Range(0, 5);
-			times = 3.0f;
-		}
-		switch (Action) {
-			case 0:
-				//anim.SetBool("isWalk", false);
-				transform.Rotate(0, 8 * Time.deltaTime, 0);
-				break;
-			case 1:
-				//anim.SetBool("isWalk", false);
-				transform.Rotate(0, -8 * Time.deltaTime, 0);
-				break;
-			case 2:
-				//anim.SetBool("isWalk", true);
-				cc.Move(transform.forward * 3 * Time.deltaTime);
-				break;
-			default:
-				//anim.SetBool("isWalk", false);
-				break;
-		}
-	}
-
-	private void Seek() {
-		if(distanceToTraget > 3) {
-			transform.LookAt(target.transform.position);
-			navMeshAgent.SetDestination(target.transform.position);
+		if (animState.IsName("ground")) {
+			navMeshAgent.isStopped = false;
+            switch (AIstate) {
+                case EnemyState.idel:
+                    Idel();
+                    break;
+                case EnemyState.patrol:
+                    Patrol();
+                    break;
+                case EnemyState.seek:
+                    Seek();
+                    break;
+                case EnemyState.attack:
+                    Attack();
+                    break;
+                case EnemyState.back:
+					Back();
+                    break;
+                case EnemyState.death:
+                    break;
+            }
         }
         else {
-			anim.SetTrigger("attack");
-			navMeshAgent.ResetPath();
+			navMeshAgent.isStopped = true;
+        }
+    }
+
+
+    private void Idel() {
+		anim.SetFloat("forward", 0);
+		timer -= Time.deltaTime;
+		if(timer <= 0) {
+			transform.forward = -transform.forward;
+			timer = 3.0f;
+			AIstate = EnemyState.patrol;
+        }
+	}
+
+	private void Patrol() {
+		anim.SetFloat("forward", 1.0f);
+		if(targetPos == Vector3.zero) {
+			targetPos = transform.position + 10 * transform.forward;
+        }
+
+		if(targetPos != transform.position) {
+			navMeshAgent.SetDestination(targetPos);
+		}
+        else {
+			//navMeshAgent.ResetPath();
+			targetPos = Vector3.zero;
+			AIstate = EnemyState.idel;
         }
 		
 	}
 
-	//public void SetTrigger(string name) {
-	//	anim.SetTrigger(name);
- //   }
+	private void Seek() {
+		if (distanceToOri > maxSeekDistance) {
+			AIstate = EnemyState.back;
+			return;
+        }
 
-	//public bool CheckState(string stateName, string layoutName = "Base Layers") {
-	//	int layoutIndex = anim.GetLayerIndex(layoutName);
-	//	return anim.GetCurrentAnimatorStateInfo(layoutIndex).IsName(stateName);
-	//}
+		anim.SetFloat("forward", 2.0f);
+		transform.LookAt(target.transform.position);
+		navMeshAgent.SetDestination(target.transform.position);
+	}
 
-	//public bool CheckStateByTag(string tagName, string layoutName = "Base Layers") {
-	//	int layoutIndex = anim.GetLayerIndex(layoutName);
-	//	return anim.GetCurrentAnimatorStateInfo(layoutIndex).IsTag(tagName);
-	//}
+	private void Attack() {
+		anim.SetFloat("forward", 0);
+		anim.SetTrigger("attack");
+	}
 
+	private void Back() {
+		target = null;
+		targetPos = originPos;
+		navMeshAgent.ResetPath();
+		anim.SetFloat("forward", 0);
+		if (wait)
+			wait = false;
+        else {
+			anim.SetFloat("forward", 1.0f);
+			if (distanceToOri >0.1f) {
+				navMeshAgent.SetDestination(targetPos);
+			}
+			else {
+				targetPos = Vector3.zero;
+				transform.forward = originForword;
+				AIstate = EnemyState.idel;
+			}
+		}
+    }
+
+
+	public void FoundTarget(GameObject target) {
+		if(this.target == null && AIstate != EnemyState.back && AIstate != EnemyState.death) {
+			this.target = target;
+			AIstate = EnemyState.seek;
+		}
+    }
+
+	public void CanAttack(bool value) {
+        if (value) {
+			if (target != null && AIstate == EnemyState.seek) {
+				AIstate = EnemyState.attack;
+				navMeshAgent.ResetPath();
+			}
+        }
+        else {
+			if (target != null && AIstate == EnemyState.attack)
+				AIstate = EnemyState.seek;
+		}
+    }
 
 	public void LockMovement() {
 		//moveable = false;

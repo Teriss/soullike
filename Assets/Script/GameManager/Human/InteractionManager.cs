@@ -15,7 +15,6 @@ public class InteractionManager : ActorManagerInterface
     private void OnTriggerEnter(Collider col) {
         CasterEvent[] casterEMs = col.GetComponents<CasterEvent>();
         foreach(var casterEM in casterEMs) {
-            print(casterEM.eventName);
             if (!overlapCasterEMs.Contains(casterEM))
                 overlapCasterEMs.Add(casterEM);
         }
