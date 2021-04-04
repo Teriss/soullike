@@ -23,7 +23,7 @@ public class EnemyAI : CharactorInput
 	private float distanceToOri;
 
 	private bool wait = true;
-	private float timer = 3.0f;
+	private float timer;
 	private int attackAction;
 
 
@@ -72,7 +72,8 @@ public class EnemyAI : CharactorInput
 		anim.SetFloat("forward", 0);
 		timer -= Time.deltaTime;
 		if(timer <= 0) {
-			transform.forward = -transform.forward;
+			//transform.forward = -transform.forward;
+			transform.Rotate(new Vector3(0, 90, 0));
 			timer = 3.0f;
 			AIstate = EnemyState.patrol;
         }
@@ -80,11 +81,11 @@ public class EnemyAI : CharactorInput
 
 	private void Patrol() {
 		anim.SetFloat("forward", 1.0f);
-		if(targetPos == Vector3.zero) {
+		if (targetPos == Vector3.zero) {
 			targetPos = transform.position + 10 * transform.forward;
         }
-
-		if(targetPos != transform.position) {
+		float dis = Vector3.Distance(transform.position, targetPos);
+		if (dis > 0.1f) {
 			navMeshAgent.SetDestination(targetPos);
 		}
         else {
@@ -107,8 +108,10 @@ public class EnemyAI : CharactorInput
 	}
 
 	private void Attack() {
-		anim.SetFloat("forward", 0);
+		attackAction = UnityEngine.Random.Range(0, 4);
+        anim.SetFloat("forward", 0);
 		anim.SetTrigger("attack");
+		anim.SetInteger("attackType",attackAction);
 	}
 
 	private void Back() {

@@ -33,7 +33,7 @@ public class PlayerManager : CharactorManager
                     Die();
             }
             else {
-                sm.AddHP(0);
+                sm.AddHP(-5);
                 if (sm.HP > 0)
                     Hit();
                 else

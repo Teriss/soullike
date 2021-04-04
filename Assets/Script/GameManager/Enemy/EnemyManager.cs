@@ -13,7 +13,7 @@ public class EnemyManager : CharactorManager
                     Die();
             }
             else {
-                //sm.AddHP(-20);
+                sm.AddHP(-10);
                 if (sm.HP > 0)
                     Hit();
                 else

@@ -30,14 +30,14 @@ public class GameManager : MonoBehaviour
 
     }
 
-    private void OnGUI() {
-        if(GUI.Button(new Rect (10,10,150,30),"weapon1"))
-            weaponFactory.CreateWeapon("WPA0280", "R", weaponManager);
-        if (GUI.Button(new Rect(10, 50, 150, 30), "weapon2"))
-            weaponFactory.CreateWeapon("WPA0201", "R", weaponManager);
-        if (GUI.Button(new Rect(10, 90, 150, 30), "weapon3"))
-            weaponFactory.CreateWeapon("WPA0603", "R", weaponManager);
-    }
+    //private void OnGUI() {
+    //    if(GUI.Button(new Rect (10,10,150,30),"weapon1"))
+    //        weaponFactory.CreateWeapon("WPA0280", "R", weaponManager);
+    //    if (GUI.Button(new Rect(10, 50, 150, 30), "weapon2"))
+    //        weaponFactory.CreateWeapon("WPA0201", "R", weaponManager);
+    //    if (GUI.Button(new Rect(10, 90, 150, 30), "weapon3"))
+    //        weaponFactory.CreateWeapon("WPA0603", "R", weaponManager);
+    //}
 
     private void CheckSingle() {
         if (instance == null) {

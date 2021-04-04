@@ -5,8 +5,8 @@ using UnityEngine;
 public abstract class StateManager : ActorManagerInterface
 {
 
-    public float maxHP = 50.0f;
-    public float HP = 50.0f;
+    public readonly float maxHP = 50.0f;
+    private float hp = 50.0f;
 
     protected bool isGround;
     protected bool isJump;
@@ -41,6 +41,7 @@ public abstract class StateManager : ActorManagerInterface
     public bool IsCounterBackEnable { get => isCounterBackEnable; set => isCounterBackEnable = value; }
     public bool IsCounterBack { get => isCounterBack; set => isCounterBack = value; }
     public bool IsStunned { get => isStunned;}
+    public float HP { get => hp;private set => hp = value; }
 
     //private void Start() {
     //    AddHP(0);
@@ -69,7 +70,6 @@ public abstract class StateManager : ActorManagerInterface
     public void AddHP(float value) {
         HP += value;
         HP = Mathf.Clamp(HP, 0, maxHP);
-
     }
 
 }

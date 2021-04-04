@@ -48,6 +48,7 @@ public class WeaponFactory
 
         WeaponData data = obj.AddComponent<WeaponData>();
         data.ATK = weaponDB.DB[weaponID]["ATK"].f;
+        wc.weaponDate = data;
         
 
         return obj;
