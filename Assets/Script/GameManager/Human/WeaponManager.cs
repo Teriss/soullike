@@ -14,7 +14,7 @@ public class WeaponManager : ActorManagerInterface
     public WeaponController wcR;
 
 
-    private void Start() {
+    private void Awake() {
         whL = transform.DFSforWeapon("LeftWeaponHandel").gameObject;
         whR =  transform.DFSforWeapon("RightWeaponHandel").gameObject;
 

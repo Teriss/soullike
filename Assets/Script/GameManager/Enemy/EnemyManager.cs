@@ -20,6 +20,8 @@ public class EnemyManager : CharactorManager
                     Die();
             }
         }
+        if (((EnemyAI)inputs).AIstate != EnemyAI.EnemyState.seek || ((EnemyAI)inputs).AIstate != EnemyAI.EnemyState.attack)
+            ((EnemyAI)inputs).FoundTarget(attacker.gameObject);
     }
 
     public override void LockActorController(bool value) {

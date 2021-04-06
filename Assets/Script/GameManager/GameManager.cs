@@ -6,6 +6,8 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public GameObject playerHandller;
+    public GameObject ingameMenu;
+    private MyButton ESC;
 
     private static GameManager instance;
 
@@ -18,16 +20,25 @@ public class GameManager : MonoBehaviour
         CheckGameObject();
         CheckSingle();
 
+        weaponDB = new GameDatabsase();
+        weaponFactory = new WeaponFactory(weaponDB);
+        weaponManager = playerHandller.GetComponent<PlayerManager>().wm;
+        weaponFactory.CreateWeapon("WPA0280", "R", weaponManager);
+
+        ingameMenu.SetActive(false);
+        ESC = new MyButton("escape");
     }
 
     private void Start() {
-        weaponDB = new GameDatabsase();
-        weaponFactory = new WeaponFactory(weaponDB);
 
-        weaponManager = playerHandller.GetComponent<PlayerManager>().wm;
 
-        weaponFactory.CreateWeapon("WPA0280", "R",weaponManager);
+    }
 
+    private void Update() {
+        if(ESC == null)
+            ESC = ESC = new MyButton("escape");
+        if (ESC.OnPressed())
+            OnPause();
     }
 
     //private void OnGUI() {
@@ -39,10 +50,34 @@ public class GameManager : MonoBehaviour
     //        weaponFactory.CreateWeapon("WPA0603", "R", weaponManager);
     //}
 
+    public void OnPause()
+    {
+        Time.timeScale = 0;
+        ingameMenu.SetActive(true);
+    }
+
+    public void OnResume()
+    {
+        Time.timeScale = 1f;
+        ingameMenu.SetActive(false);
+    }
+
+    public void OnRestart()
+    {
+        //Loading Scene0
+        UnityEngine.SceneManagement.SceneManager.LoadScene(0);
+        Time.timeScale = 1f;
+    }
+
+    public void OnQuit() {
+        UnityEditor.EditorApplication.isPlaying = false;
+        Application.Quit();
+    }
+
     private void CheckSingle() {
         if (instance == null) {
             instance = this;
-            DontDestroyOnLoad(gameObject);
+            //DontDestroyOnLoad(gameObject);
             return;
         }
         else

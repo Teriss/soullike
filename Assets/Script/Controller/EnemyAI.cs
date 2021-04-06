@@ -7,9 +7,9 @@ using UnityEngine.AI;
 
 public class EnemyAI : CharactorInput
 {
-	private enum EnemyState { idel, patrol, seek, attack, back ,death }
-	[SerializeReference]
-	private EnemyState AIstate = new EnemyState();
+	public enum EnemyState { idel, patrol, seek, attack, back ,death }
+	private EnemyState aiState = new EnemyState();
+    public EnemyState AIstate { get => aiState;}
 
 	private AnimatorStateInfo animState;
 	private NavMeshAgent navMeshAgent;
@@ -27,11 +27,11 @@ public class EnemyAI : CharactorInput
 	private int attackAction;
 
 
-	void Start() {
+    void Start() {
 		navMeshAgent = GetComponent<NavMeshAgent>();
 		anim = model.GetComponent<Animator>();
 		cc = GetComponent<CharacterController>();
-		AIstate = EnemyState.idel;
+		aiState = EnemyState.idel;
 		originPos = transform.position;
 		originForword = transform.forward;
 	}
@@ -42,7 +42,7 @@ public class EnemyAI : CharactorInput
 
 		if (animState.IsName("ground")) {
 			navMeshAgent.isStopped = false;
-            switch (AIstate) {
+            switch (aiState) {
                 case EnemyState.idel:
                     Idel();
                     break;
@@ -75,7 +75,7 @@ public class EnemyAI : CharactorInput
 			//transform.forward = -transform.forward;
 			transform.Rotate(new Vector3(0, 90, 0));
 			timer = 3.0f;
-			AIstate = EnemyState.patrol;
+			aiState = EnemyState.patrol;
         }
 	}
 
@@ -91,14 +91,14 @@ public class EnemyAI : CharactorInput
         else {
 			//navMeshAgent.ResetPath();
 			targetPos = Vector3.zero;
-			AIstate = EnemyState.idel;
+			aiState = EnemyState.idel;
         }
 		
 	}
 
 	private void Seek() {
 		if (distanceToOri > maxSeekDistance) {
-			AIstate = EnemyState.back;
+			aiState = EnemyState.back;
 			return;
         }
 
@@ -129,29 +129,29 @@ public class EnemyAI : CharactorInput
 			else {
 				targetPos = Vector3.zero;
 				transform.forward = originForword;
-				AIstate = EnemyState.idel;
+				aiState = EnemyState.idel;
 			}
 		}
     }
 
 
 	public void FoundTarget(GameObject target) {
-		if(this.target == null && AIstate != EnemyState.back && AIstate != EnemyState.death) {
+		if(this.target == null && aiState != EnemyState.back && aiState != EnemyState.death) {
 			this.target = target;
-			AIstate = EnemyState.seek;
+			aiState = EnemyState.seek;
 		}
     }
 
 	public void CanAttack(bool value) {
         if (value) {
-			if (target != null && AIstate == EnemyState.seek) {
-				AIstate = EnemyState.attack;
+			if (target != null && aiState == EnemyState.seek) {
+				aiState = EnemyState.attack;
 				navMeshAgent.ResetPath();
 			}
         }
         else {
-			if (target != null && AIstate == EnemyState.attack)
-				AIstate = EnemyState.seek;
+			if (target != null && aiState == EnemyState.attack)
+				aiState = EnemyState.seek;
 		}
     }
 
